@@ -27,7 +27,7 @@ instance Show Knapsack where
             -- Formats a list of items into a specifically formatted string
             formatItems :: [Item] -> String
             formatItems [] = ""
-            formatItems its' = "\n" ++ (prepSpaces $ foldl (\acc it' -> acc ++ show it' ++ "\n") "" its')
+            formatItems its' = "\n" ++ (prepSpaces $ foldr (\it' acc -> acc ++ show it' ++ "\n") "" its')
 
 
 -- Prepends four spaces to each line of a string

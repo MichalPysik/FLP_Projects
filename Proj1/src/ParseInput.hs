@@ -29,7 +29,7 @@ knapsackParser = do
     _ <- Parsec.string "items:["
     items <- Parsec.many itemParser
     _ <- Parsec.string "]}"
-    return $ Knapsack (read maxWeight) (read minCost) items
+    return $ Knapsack (read maxWeight :: Int) (read minCost :: Int) items
 
 -- Parser for Item data type
 itemParser :: Parsec.Parsec String () Item
@@ -40,5 +40,5 @@ itemParser = do
     _ <- Parsec.string "cost:"
     cost <- Parsec.many1 Parsec.digit
     _ <- Parsec.char '}'
-    return $ Item (read weight) (read cost)
+    return $ Item (read weight :: Int) (read cost :: Int)
     

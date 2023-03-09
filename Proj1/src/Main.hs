@@ -23,11 +23,19 @@ main = do
         then print knapsack
         else return ()
     if "brute" `elem` actions
-        then print $ bruteForce knapsack
+        then do
+            let bfk = bruteForce knapsack
+            case bfk of
+                Left failed -> print failed
+                Right solution -> putStrLn $ "[" ++ (formatList solution) ++ "]"
         else return ()
     if "optimized" `elem` actions
         then putStrLn "Optimized selected"
         else return ()
+
+
+formatList :: Show a => [a] -> String
+formatList = foldr (\x acc -> if acc == "" then show x else acc ++ " " ++ show x) ""
 
 
 -- Parses command line arguments (specialized interface for parseArgs' function)
@@ -47,5 +55,7 @@ parseArgs' (x:xs) (actions, filepath)
     | filepath == "" = parseArgs' xs (actions, x)
     | otherwise = error "Too many arguments"
 
+--formatOutputList :: (Show a) => [a] -> String
+--formatOutputList 
 
 
