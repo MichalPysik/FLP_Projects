@@ -7,9 +7,11 @@ module Main where
 
 import System.Environment (getArgs)
 import Data.Char (isSpace)
-import Types (Knapsack(..), Item(..))
+import System.Random(newStdGen)
+import Types ()
 import ParseInput (parseInput)
 import BruteForce (bruteForce)
+import SimulatedAnnealing (simulatedAnnealing)
 
 
 -- Main function
@@ -30,7 +32,15 @@ main = do
                 Right solution -> putStrLn $ "[" ++ (formatList solution) ++ "]"
         else return ()
     if "optimized" `elem` actions
-        then putStrLn "Optimized selected"
+        then do
+            gen <- newStdGen
+            let alpha = 0.85
+            let initTemp = 1000.0
+            let maxIters = 5000
+            let sak = simulatedAnnealing knapsack gen alpha initTemp maxIters
+            case sak of
+                Left failed -> print failed
+                Right solution -> putStrLn $ "[" ++ (formatList solution) ++ "]"
         else return ()
 
 
@@ -54,8 +64,5 @@ parseArgs' (x:xs) (actions, filepath)
     | head x == '-' = error ("Unknown option \'" ++ x ++ "\'")
     | filepath == "" = parseArgs' xs (actions, x)
     | otherwise = error "Too many arguments"
-
---formatOutputList :: (Show a) => [a] -> String
---formatOutputList 
 
 

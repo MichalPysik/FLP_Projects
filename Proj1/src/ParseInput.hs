@@ -23,22 +23,22 @@ knapsackParser :: Parsec.Parsec String () Knapsack
 knapsackParser = do
     _ <- Parsec.string "Knapsack{"
     _ <- Parsec.string "maxWeight:"
-    maxWeight <- Parsec.many1 Parsec.digit
+    maxW <- Parsec.many1 Parsec.digit
     _ <- Parsec.string "minCost:"
-    minCost <- Parsec.many1 Parsec.digit
+    minC <- Parsec.many1 Parsec.digit
     _ <- Parsec.string "items:["
-    items <- Parsec.many itemParser
+    its <- Parsec.many itemParser
     _ <- Parsec.string "]}"
-    return $ Knapsack (read maxWeight :: Int) (read minCost :: Int) items
+    return $ Knapsack (read maxW :: Int) (read minC :: Int) (reverse its)
 
 -- Parser for Item data type
 itemParser :: Parsec.Parsec String () Item
 itemParser = do 
     _ <- Parsec.string "Item{"
     _ <- Parsec.string "weight:"
-    weight <- Parsec.many1 Parsec.digit
+    w <- Parsec.many1 Parsec.digit
     _ <- Parsec.string "cost:"
-    cost <- Parsec.many1 Parsec.digit
+    c <- Parsec.many1 Parsec.digit
     _ <- Parsec.char '}'
-    return $ Item (read weight :: Int) (read cost :: Int)
+    return $ Item (read w :: Int) (read c :: Int)
     

@@ -1,0 +1,7 @@
+All tests were run in the following manner: ./flp22-fun -b -o test/testxx.in > test/testxx.out
+
+filename - optimal solution - description
+test01.in - [0 1 0 0] - taken from project instructions
+test02.in - False - unpossible to satify minCost
+test03.in - [0 0 0 0] - only way to satisfy maxWeight is an empty knapsack
+test04.in - [1 0 1 0 0 0 1 1 0] - slightly more complicated problem
