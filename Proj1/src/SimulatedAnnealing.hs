@@ -22,9 +22,9 @@ simulatedAnnealing knapsack gen alpha initTemp maxIters =
 -- Returns the best state found during the run (and the final generator)
 simulatedAnnealing' :: Knapsack -> [Int] -> StdGen -> Double -> Double -> Int -> Int -> ([Int], StdGen)
 simulatedAnnealing' knapsack state gen alpha initTemp iter maxIters
-    | iter == maxIters = (state, gen)
+    | permutItemCost state (items knapsack) >= (minCost knapsack) || iter == maxIters = (state, gen)
     | permutCmp knapsack state newState = simulatedAnnealing' knapsack newState gen' alpha initTemp (iter + 1) maxIters
-    | permutItemWeight newState (items knapsack) <= (maxWeight knapsack) && accept = simulatedAnnealing' knapsack state gen'' alpha initTemp (iter + 1) maxIters
+    | permutItemWeight newState (items knapsack) <= (maxWeight knapsack) && accept = simulatedAnnealing' knapsack newState gen'' alpha initTemp (iter + 1) maxIters
     | otherwise = simulatedAnnealing' knapsack state gen'' alpha initTemp (iter + 1) maxIters
     where
         (newState, gen') = flipNeighbor state gen

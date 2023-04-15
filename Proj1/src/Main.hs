@@ -34,9 +34,9 @@ main = do
     if "optimized" `elem` actions
         then do
             gen <- newStdGen
-            let alpha = 0.85
+            let alpha = 0.9
             let initTemp = 1000.0
-            let maxIters = 5000
+            let maxIters = 10000
             let sak = simulatedAnnealing knapsack gen alpha initTemp maxIters
             case sak of
                 Left failed -> print failed

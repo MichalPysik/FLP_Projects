@@ -4,8 +4,9 @@
 
 Everything was implemented and simulated annealing had been chosen as the optimized algorithm.
 
-I do not guarantee reliable performance of the optimized algorithm because of the arbirary choice of hyperparameters (alpha, maxIters, ...)
+I do not guarantee reliable performance of the optimized algorithm because of the arbirary choice of hyperparameters (alpha, initTemp, maxIters)
 in the Main module, but I am fully responsible for the correctness of the algorithm's implementation.
+This implementation of simulated annealing returns the first solution it finds, that satisfies the constraints.
 
 As the cooling schedule, exponential multiplicative cooling was used: T_k = T_0 * alpha^k, where T_0 is the initial temperature, alpha is the cooling
 rate and k is the current iteration number.
