@@ -11,7 +11,8 @@ solve :-
     read_lines(LL),
     split_lines(LL, SLL),
     create_edges(SLL),
-    print(SLL).
+    findall(CS, complete_skeleton(CS), CSS),
+    print(CSS).
 
 
 % edge(A, B) <= there is an edge from A to B
@@ -27,6 +28,11 @@ create_edges([[[X],[Y]]|Es]) :-
 all_edges(Edges) :-
     findall(X-Y, edge(X, Y), Edges).
 
+% all_vertices(Vertices) <= Vertices is a list of all vertices
+all_vertices(Vertices) :-
+    findall(X, (edge(X, _); edge(_, X)), Vs),
+    list_to_set(Vs, Vertices).
+
 
 % subset(X, Y) <= Y is a subset of X
 subset([], []).
@@ -39,7 +45,6 @@ all_subsets(Edges, Subsets) :- findall(Subset, subset(Edges, Subset), Subsets).
 
 % connected(X, Y, Edges) <= there is a path from X to Y in graph consiting of Edges
 connected(X, Y, Edges) :-
-    all_edges(Edges),
     dfs(X, Y, [X,Y], Edges), !.
 
 % -- Depth-first search algorithm for reaching node Y from node X in graph consiting of Edges --
@@ -51,13 +56,33 @@ dfs(X, Y, Visited, Edges) :-
     (member(X-Z, Edges); member(Z-X, Edges)),
     \+ member(Z, Visited),
     dfs(Z, Y, [Z|Visited], Edges).
- 
-
-% all_complete_skeletons :- Comp_skelets is list of all complete skeletons in graph consisting of Edges
-%all_complete_skeletons(Edges, CompSkelets) :-
-%    all_edges(Edges),
-%    bagof(CompSkelet, (
-
- %   ))
 
 
+% complete_subgraph(Subgraph) <= Subgraph is a complete subgraph
+complete_subgraph(Subgraph) :-
+    all_edges(Edges),
+    all_vertices(Vertices),
+    all_subsets(Edges, Subsets),
+    member(Subgraph, Subsets),
+    % Check if all vertices are contained in the subgraph
+    forall(member(V, Vertices), (member(V-_, Subgraph); member(_-V, Subgraph))),
+    % Check if all vertices are connected
+    forall(
+        (
+            (member(X-_, Subgraph); member(_-X, Subgraph)), 
+            (member(Y-_, Subgraph); member(_-Y, Subgraph)),
+            X \= Y
+        ),
+        connected(X, Y, Subgraph)
+    ).
+
+% complete_skeleton(Subgraph) <= Subgraph is a complete skeleton
+complete_skeleton(Subgraph) :-
+    all_vertices(Vertices),
+    length(Vertices, N),
+    N1 is N - 1,
+    complete_subgraph(Subgraph),
+    % For a connected graph with n vertices, its complete skeleton is its complete subgraph with n-1 edges
+    length(Subgraph, N1).
+
+    
