@@ -1,54 +1,68 @@
-% FLP Project 2 (Prolog) - Skeleton of a graph
-% Author: Michal Pysik (xpysik00)
+/** FLP Project 2 (Prolog) - Complete skeletons of a graph
+    Author: Michal Pysik (xpysik00)  */
 
-% Load input2.pl for parsing stdin
+
+/** Load input2.pl for parsing stdin */
 :- [input2].
 
 
-% The main goal
+/** The main goal */
 solve :-
     prompt(_, ''),
     read_lines(LL),
     split_lines(LL, SLL),
     create_edges(SLL),
     findall(CS, complete_skeleton(CS), CSS),
-    print(CSS).
+    print_skeletons(CSS).
 
 
-% edge(A, B) <= there is an edge from A to B
+/** Prints a single line representing a single complete skeleton */
+print_skeleton([X-Y]) :- write(X-Y), write('\n').
+print_skeleton([X-Y|Es]) :-
+    write(X-Y), write(' '),
+    print_skeleton(Es).
+
+/** Prints all complete skeletons on separate lines */
+print_skeletons([]).
+print_skeletons([SK|SKs]) :- 
+    print_skeleton(SK),
+    print_skeletons(SKs).
+
+
+/** edge(A, B) <= there is an edge from A to B */
 :- dynamic edge/2.
 
-% create_edges(LLL) creates edges from a list of lists of "singleton-list tuples" LLL
+/** create_edges(LLL) creates edges from a list of lists of "singleton-list tuples" LLL */
 create_edges([]).
 create_edges([[[X],[Y]]|Es]) :-
     assert(edge(X, Y)),
     create_edges(Es).
 
-% all_edges(Edges) <= Edges is a list of all edges
+/** all_edges(Edges) <= Edges is a list of all edges */
 all_edges(Edges) :-
     findall(X-Y, edge(X, Y), Edges).
 
-% all_vertices(Vertices) <= Vertices is a list of all vertices
+/** all_vertices(Vertices) <= Vertices is a list of all vertices */
 all_vertices(Vertices) :-
     findall(X, (edge(X, _); edge(_, X)), Vs),
     list_to_set(Vs, Vertices).
 
 
-% subset(X, Y) <= Y is a subset of X
+/** subset(X, Y) <= Y is a subset of X */
 subset([], []).
 subset([X|Xs], [X|Ys]) :- subset(Xs, Ys).
 subset([_|Xs], Ys) :- subset(Xs, Ys).
 
-% all_subsets(Edges, Subsets) <= Subsets is a list of all possible subsets of Edges
+/** all_subsets(Edges, Subsets) <= Subsets is a list of all possible subsets of Edges */
 all_subsets(Edges, Subsets) :- findall(Subset, subset(Edges, Subset), Subsets).
 
 
-% connected(X, Y, Edges) <= there is a path from X to Y in graph consiting of Edges
+/** connected(X, Y, Edges) <= there is a path from X to Y in graph consiting of Edges */
 connected(X, Y, Edges) :-
     dfs(X, Y, [X,Y], Edges), !.
 
-% -- Depth-first search algorithm for reaching node Y from node X in graph consiting of Edges --
-% Terminating condition when X and Y are directly connected
+/** Depth-first search algorithm for reaching node Y from node X in graph consiting of Edges
+    Terminating condition comes when X and Y are directly connected */
 dfs(X, Y, _, Edges) :-
     member(X-Y, Edges); member(Y-X, Edges).
 % Recursive case where new node Z is added to Visited, search continues from Z
@@ -58,7 +72,7 @@ dfs(X, Y, Visited, Edges) :-
     dfs(Z, Y, [Z|Visited], Edges).
 
 
-% complete_subgraph(Subgraph) <= Subgraph is a complete subgraph
+/** complete_subgraph(Subgraph) <= Subgraph is a complete subgraph */
 complete_subgraph(Subgraph) :-
     all_edges(Edges),
     all_vertices(Vertices),
@@ -76,7 +90,7 @@ complete_subgraph(Subgraph) :-
         connected(X, Y, Subgraph)
     ).
 
-% complete_skeleton(Subgraph) <= Subgraph is a complete skeleton
+/** complete_skeleton(Subgraph) <= Subgraph is a complete skeleton */
 complete_skeleton(Subgraph) :-
     all_vertices(Vertices),
     length(Vertices, N),
