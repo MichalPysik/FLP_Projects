@@ -13,7 +13,8 @@ solve :-
     split_lines(LL, SLL),
     create_edges(SLL),
     findall(CS, complete_skeleton(CS), CSS),
-    print_skeletons(CSS).
+    print_skeletons(CSS),
+    halt.
 
 
 /** Prints a single line representing a single complete skeleton */

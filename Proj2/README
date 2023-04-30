@@ -1,0 +1,13 @@
+Implementováno je vše.
+
+Nejprve jsou nalezeny všechny možné úplné spojité podgrafy. Na to je zřejmě potřeba predikát
+určující zda existuje cesta mezi danými dvěma vrcholy, ten je implementován pomocí DFS.
+Z těchto podrafů jsou poté vyfiltrovány minimální kostry grafu - jelikož předpokládáme
+spojitý graf, minimální kostrou bude každý úplný podgraf, který obsahuje právě N vrcholů
+a tedy (N - 1) hran. Tyto kostry jsou poté zřejmě všechny možné minimální kostry grafu.
+
+Popis testů:
+- test1: test ze zadání - 0.025s
+- test2: nespojitý graf - 0.025s
+- test3: graf skládající se z cyklu - 0.028s
+- test4: graf izomorfní s klasickým domečkem, který má střechu, a křížek uprostřed čtverce - 0.05s
